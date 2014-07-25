@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.UserHandle;
+import android.os.SystemProperties;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -44,6 +45,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import android.view.WindowManagerGlobal;
 import com.android.internal.view.RotationPolicy;
@@ -90,6 +92,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_DISPLAY_COLOR = "color_calibration";
     private static final String KEY_DISPLAY_GAMMA = "gamma_tuning";
     private static final String KEY_SCREEN_COLOR_SETTINGS = "screencolor_settings";
+    private static final String KEY_ILLUMINATION = "illumination";
 
     private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
 
@@ -110,6 +113,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private PreferenceScreen mBatteryPulse;
     private PreferenceScreen mDisplayRotationPreference;
     private PreferenceScreen mScreenColorSettings;
+    private CheckBoxPreference mIllumination;
 
     private final Configuration mCurConfig = new Configuration();
 
@@ -357,6 +361,14 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         }
         summary.append(" " + getString(R.string.display_rotation_unit));
         mDisplayRotationPreference.setSummary(summary);
+
+        if (SystemProperties.getBoolean("ro.semc.illumination", false)) {
+            mIllumination = (CheckBoxPreference) findPreference(KEY_ILLUMINATION);
+            mIllumination.setOnPreferenceChangeListener(this);
+        } else {
+            getPreferenceScreen().removePreference(findPreference(KEY_ILLUMINATION));
+            mIllumination = null;
+        }
     }
 
     private void updateTimeoutPreferenceDescription(long currentTimeout) {
@@ -596,6 +608,14 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             return true;
         } else if (preference == mTapToWake) {
             return TapToWake.setEnabled(mTapToWake.isChecked());
+        } else if (preference == mIllumination && mIllumination != null) {
+            boolean status = mIllumination.isChecked();
+
+            if (status) {
+                Toast.makeText(getActivity(), "Illumination bar enabled", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "Illumination bar disabled", Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
