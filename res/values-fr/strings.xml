@@ -2048,4 +2048,8 @@
     <string name="user_image_take_photo" msgid="1280274310152803669">"Prendre une photo"</string>
     <string name="user_image_choose_photo" msgid="7940990613897477057">"Sélectionner une photo dans la galerie"</string>
     <string name="regulatory_info_text" msgid="5623087902354026557"></string>
+    
+    <!-- LED Bar -->
+    <string name="illumination_title">Barre de LEDs</string>
+    <string name="illumination_summary">Activer/Désactiver la barre de LEDs pour avoir la même experience que sur ROM Sony</string>
 </resources>
