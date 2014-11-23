@@ -366,7 +366,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             mIllumination = (CheckBoxPreference) findPreference(KEY_ILLUMINATION);
 
             if (mIllumination != null) {
-                mIllumination.setChecked(Settings.System.getInt(resolver,
+                mIllumination.setChecked(Settings.System.getInt(getContentResolver(),
                     Settings.System.ILLUMINATION_BAR, 0) == 1);
                 mIllumination.setOnPreferenceChangeListener(this);
             }
